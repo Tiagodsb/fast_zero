@@ -1,0 +1,27 @@
+from datetime import datetime
+from sqlalchemy.orm import Mapped, mapped_as_dataclass, registry, mapped_column
+from sqlalchemy import func
+
+
+table_registry = registry()
+
+
+@mapped_as_dataclass(table_registry)
+class User:
+    __tablename__ = 'users'
+
+    id: Mapped[int] = mapped_column(primary_key=True, init=False)
+
+    username: Mapped[str] = mapped_column(unique=True)
+
+    email: Mapped[str] = mapped_column(unique=True)
+
+    password: Mapped[str]
+
+    created_at: Mapped[datetime] = mapped_column(
+        init=False, server_default=func.now()
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        init=False, nullable=True, onupdate=func.now()
+    )
